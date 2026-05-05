@@ -19,12 +19,17 @@
       --success: #22c55e;
       --danger: #ef4444;
       --gray: #475569;
+      --warning: #f59e0b;
       --high-bg: rgba(239, 68, 68, 0.18);
       --high-text: #fca5a5;
       --medium-bg: rgba(245, 158, 11, 0.18);
       --medium-text: #fcd34d;
       --low-bg: rgba(34, 197, 94, 0.18);
       --low-text: #86efac;
+      --task-bg: rgba(59, 130, 246, 0.18);
+      --task-text: #bfdbfe;
+      --appointment-bg: rgba(168, 85, 247, 0.18);
+      --appointment-text: #e9d5ff;
       --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
     }
 
@@ -107,7 +112,7 @@
     }
 
     .hero p {
-      max-width: 880px;
+      max-width: 900px;
       color: rgba(255, 255, 255, 0.88);
       line-height: 1.65;
     }
@@ -217,6 +222,42 @@
       line-height: 1.5;
     }
 
+    .type-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .type-option {
+      position: relative;
+    }
+
+    .type-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .type-option span {
+      display: block;
+      text-align: center;
+      padding: 13px 14px;
+      border-radius: 17px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.72);
+      color: var(--soft);
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .type-option input:checked + span {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.34), rgba(37, 99, 235, 0.28));
+      border-color: rgba(139, 92, 246, 0.7);
+      color: white;
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12);
+    }
+
     .btn {
       border: none;
       border-radius: 17px;
@@ -241,6 +282,7 @@
     .btn-success { background: var(--success); }
     .btn-danger { background: var(--danger); }
     .btn-gray { background: var(--gray); }
+    .btn-warning { background: var(--warning); }
     .btn-calendar { background: linear-gradient(135deg, #06b6d4, #2563eb); }
 
     .stats {
@@ -349,6 +391,12 @@
       font-weight: 700;
     }
 
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
     .badge {
       display: inline-flex;
       align-items: center;
@@ -376,6 +424,18 @@
       background: var(--low-bg);
       color: var(--low-text);
       border: 1px solid rgba(74, 222, 128, 0.22);
+    }
+
+    .type-task {
+      background: var(--task-bg);
+      color: var(--task-text);
+      border: 1px solid rgba(96, 165, 250, 0.24);
+    }
+
+    .type-appointment {
+      background: var(--appointment-bg);
+      color: var(--appointment-text);
+      border: 1px solid rgba(196, 181, 253, 0.24);
     }
 
     .expand-text {
@@ -426,6 +486,21 @@
       word-break: break-word;
     }
 
+    .schedule-box {
+      margin-bottom: 16px;
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid var(--border);
+    }
+
+    .schedule-box-title {
+      font-weight: 900;
+      margin-bottom: 12px;
+      color: var(--soft);
+    }
+
+    .schedule-actions,
     .todo-actions {
       display: flex;
       flex-wrap: wrap;
@@ -643,7 +718,9 @@
       .todo-header { align-items: flex-start; flex-direction: column; }
       .todo-left { align-items: flex-start; flex-direction: column; }
       .detail-grid { grid-template-columns: 1fr; }
+      .schedule-actions,
       .todo-actions { flex-direction: column; }
+      .schedule-actions .btn,
       .todo-actions .btn { width: 100%; }
       .calendar-day { min-height: 72px; padding: 7px; }
       .calendar-task { display: none; }
@@ -663,8 +740,8 @@
 
         <h1>Arbeits-To-do-App</h1>
         <p>
-          Trage Aufgaben ein, terminiere sie mit Datum und Uhrzeit und sieh alle Termine im Kalender.
-          Offene Aufgaben von früher werden automatisch auf heute verschoben, außer sie haben einen Termin in der Zukunft.
+          Lege Aufgaben oder Termine für heute an. Datum und Uhrzeit werden nicht direkt beim Erstellen abgefragt.
+          Wenn du auf Details klickst, kannst du eine Aufgabe später genauer terminieren und neu organisieren.
         </p>
       </header>
 
@@ -674,11 +751,25 @@
         <div class="top-grid">
           <section class="panel">
             <div class="panel-inner">
-              <h2 class="panel-title">Neue Aufgabe</h2>
+              <h2 class="panel-title">Neu erstellen</h2>
 
               <form id="todoForm">
                 <div class="field">
-                  <label for="todoTitle">Aufgabe</label>
+                  <label>Typ</label>
+                  <div class="type-switch">
+                    <label class="type-option">
+                      <input type="radio" name="itemType" value="task" checked />
+                      <span>Aufgabe</span>
+                    </label>
+                    <label class="type-option">
+                      <input type="radio" name="itemType" value="appointment" />
+                      <span>Termin</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="todoTitle">Titel</label>
                   <input type="text" id="todoTitle" placeholder="Zum Beispiel: Angebot für Kunden fertigstellen" required />
                 </div>
 
@@ -691,24 +782,12 @@
                   </select>
                 </div>
 
-                <div class="field-row">
-                  <div class="field">
-                    <label for="todoDueDate">Termin-Datum</label>
-                    <input type="date" id="todoDueDate" />
-                  </div>
-
-                  <div class="field">
-                    <label for="todoDueTime">Termin-Uhrzeit</label>
-                    <input type="time" id="todoDueTime" />
-                  </div>
-                </div>
-
                 <div class="field">
                   <label for="todoDescription">Weitere Informationen</label>
-                  <textarea id="todoDescription" placeholder="Zusätzliche Notizen, Ansprechpartner, Deadlines oder Details"></textarea>
+                  <textarea id="todoDescription" placeholder="Zusätzliche Notizen, Ansprechpartner oder Details"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Aufgabe hinzufügen</button>
+                <button type="submit" class="btn btn-primary">Speichern</button>
               </form>
             </div>
           </section>
@@ -723,7 +802,7 @@
               <div class="stat-number" id="doneCount">0</div>
             </div>
             <div class="stat-card">
-              <div class="stat-label">Termine gesamt</div>
+              <div class="stat-label">Terminierte Einträge</div>
               <div class="stat-number" id="scheduledCount">0</div>
             </div>
           </aside>
@@ -733,7 +812,7 @@
           <div class="sections">
             <section>
               <div class="section-header">
-                <h2>Heute fällig / offen</h2>
+                <h2>Heute offen</h2>
                 <div class="section-count" id="openSectionCount">0</div>
               </div>
               <div id="openTodos" class="todo-list"></div>
@@ -792,13 +871,11 @@
   </aside>
 
   <script>
-    const STORAGE_KEY = "arbeits_todos_dark_calendar_v2";
+    const STORAGE_KEY = "arbeits_todos_reorganize_v1";
 
     const todoForm = document.getElementById("todoForm");
     const todoTitle = document.getElementById("todoTitle");
     const todoPriority = document.getElementById("todoPriority");
-    const todoDueDate = document.getElementById("todoDueDate");
-    const todoDueTime = document.getElementById("todoDueTime");
     const todoDescription = document.getElementById("todoDescription");
 
     const openTodosContainer = document.getElementById("openTodos");
@@ -853,7 +930,7 @@
     }
 
     function formatDateTimeGerman(dateString, timeString) {
-      if (!dateString) return "Kein Termin gesetzt";
+      if (!dateString) return "Noch nicht terminiert";
       if (!timeString) return formatDateGerman(dateString);
 
       const date = new Date(`${dateString}T${timeString}`);
@@ -881,15 +958,15 @@
       let changed = false;
 
       const updatedTodos = todos.map(todo => {
-        const dueDate = todo.dueDate || todo.date;
-        const isScheduledFuture = dueDate && dueDate > today;
+        const plannedDate = todo.plannedDate || todo.date;
+        const isPlannedFuture = plannedDate && plannedDate > today;
 
-        if (!todo.done && todo.date < today && !isScheduledFuture) {
+        if (!todo.done && todo.date < today && !isPlannedFuture) {
           changed = true;
           return {
             ...todo,
             date: today,
-            dueDate: today,
+            plannedDate: today,
             movedCount: (todo.movedCount || 0) + 1
           };
         }
@@ -919,10 +996,18 @@
       return 3;
     }
 
+    function getTypeText(type) {
+      return type === "appointment" ? "Termin" : "Aufgabe";
+    }
+
+    function getTypeClass(type) {
+      return type === "appointment" ? "type-appointment" : "type-task";
+    }
+
     function sortTodos(todos) {
       return todos.sort((a, b) => {
-        const dateA = `${a.dueDate || a.date}T${a.dueTime || "23:59"}`;
-        const dateB = `${b.dueDate || b.date}T${b.dueTime || "23:59"}`;
+        const dateA = `${a.plannedDate || a.date}T${a.plannedTime || "23:59"}`;
+        const dateB = `${b.plannedDate || b.date}T${b.plannedTime || "23:59"}`;
         const dateDiff = new Date(dateA) - new Date(dateB);
         if (dateDiff !== 0) return dateDiff;
 
@@ -938,20 +1023,20 @@
       return String(Date.now() + Math.random());
     }
 
-    function addTodo(title, priority, description, dueDate, dueTime) {
+    function addTodo(title, priority, description, type) {
       const todos = loadTodos();
       const today = getTodayString();
-      const taskDate = dueDate || today;
 
       const newTodo = {
         id: createId(),
+        type,
         title,
         priority,
         description,
         done: false,
-        date: taskDate,
-        dueDate: taskDate,
-        dueTime: dueTime || "",
+        date: today,
+        plannedDate: today,
+        plannedTime: "",
         createdAt: new Date().toISOString(),
         doneAt: null,
         movedCount: 0
@@ -990,6 +1075,77 @@
       renderApp();
     }
 
+    function saveSchedule(id) {
+      const dateInput = document.getElementById(`scheduleDate_${id}`);
+      const timeInput = document.getElementById(`scheduleTime_${id}`);
+
+      const newDate = dateInput.value;
+      const newTime = timeInput.value;
+
+      if (newTime && !newDate) {
+        alert("Bitte wähle auch ein Datum aus, wenn du eine Uhrzeit angibst.");
+        return;
+      }
+
+      const todos = loadTodos().map(todo => {
+        if (todo.id === id) {
+          const plannedDate = newDate || getTodayString();
+          return {
+            ...todo,
+            date: plannedDate,
+            plannedDate,
+            plannedTime: newTime || ""
+          };
+        }
+        return todo;
+      });
+
+      saveTodos(todos);
+      selectedDate = newDate || getTodayString();
+      renderApp();
+    }
+
+    function clearSchedule(id) {
+      const today = getTodayString();
+      const todos = loadTodos().map(todo => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            date: today,
+            plannedDate: today,
+            plannedTime: ""
+          };
+        }
+        return todo;
+      });
+
+      saveTodos(todos);
+      selectedDate = today;
+      renderApp();
+    }
+
+    function moveToTomorrow(id) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowString = toDateStringLocal(tomorrow);
+
+      const todos = loadTodos().map(todo => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            date: tomorrowString,
+            plannedDate: tomorrowString,
+            movedCount: (todo.movedCount || 0) + 1
+          };
+        }
+        return todo;
+      });
+
+      saveTodos(todos);
+      selectedDate = tomorrowString;
+      renderApp();
+    }
+
     function escapeHtml(text) {
       const div = document.createElement("div");
       div.textContent = text || "";
@@ -1008,11 +1164,11 @@
     }
 
     function downloadCalendarFile(todo) {
-      const dueDate = todo.dueDate || todo.date || getTodayString();
-      const startTime = todo.dueTime || "09:00";
-      const start = createIcsDate(dueDate, startTime);
+      const plannedDate = todo.plannedDate || todo.date || getTodayString();
+      const startTime = todo.plannedTime || "09:00";
+      const start = createIcsDate(plannedDate, startTime);
 
-      const startDate = new Date(`${dueDate}T${startTime}:00`);
+      const startDate = new Date(`${plannedDate}T${startTime}:00`);
       const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
       const endDateString = toDateStringLocal(endDate);
       const endTimeString = String(endDate.getHours()).padStart(2, "0") + ":" + String(endDate.getMinutes()).padStart(2, "0");
@@ -1050,15 +1206,19 @@
     function createTodoElement(todo) {
       const todoElement = document.createElement("article");
       todoElement.className = todo.done ? "todo done" : "todo";
-      const dueDate = todo.dueDate || todo.date || getTodayString();
+      const plannedDate = todo.plannedDate || todo.date || getTodayString();
+      const type = todo.type || "task";
 
       todoElement.innerHTML = `
         <div class="todo-header">
           <div class="todo-left">
-            <span class="badge ${getPriorityClass(todo.priority)}">${getPriorityText(todo.priority)}</span>
+            <div class="badge-row">
+              <span class="badge ${getTypeClass(type)}">${getTypeText(type)}</span>
+              <span class="badge ${getPriorityClass(todo.priority)}">${getPriorityText(todo.priority)}</span>
+            </div>
             <div>
               <div class="todo-title">${escapeHtml(todo.title)}</div>
-              <div class="todo-subline">${formatDateTimeGerman(dueDate, todo.dueTime)}</div>
+              <div class="todo-subline">${formatDateTimeGerman(plannedDate, todo.plannedTime)}</div>
             </div>
           </div>
           <span class="expand-text">Details öffnen</span>
@@ -1071,8 +1231,8 @@
               <div class="detail-value">${todo.description ? escapeHtml(todo.description).replace(/\n/g, "<br>") : "Keine weiteren Informationen vorhanden."}</div>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Termin</span>
-              <div class="detail-value">${formatDateTimeGerman(dueDate, todo.dueTime)}</div>
+              <span class="detail-label">Aktuelle Planung</span>
+              <div class="detail-value">${formatDateTimeGerman(plannedDate, todo.plannedTime)}</div>
             </div>
             <div class="detail-item">
               <span class="detail-label">Schon verschoben</span>
@@ -1088,6 +1248,25 @@
                 <div class="detail-value">${new Date(todo.doneAt).toLocaleString("de-DE")}</div>
               </div>
             ` : ""}
+          </div>
+
+          <div class="schedule-box">
+            <div class="schedule-box-title">Neu organisieren / genauer terminieren</div>
+            <div class="field-row">
+              <div class="field">
+                <label for="scheduleDate_${todo.id}">Datum</label>
+                <input type="date" id="scheduleDate_${todo.id}" value="${plannedDate}" />
+              </div>
+              <div class="field">
+                <label for="scheduleTime_${todo.id}">Uhrzeit</label>
+                <input type="time" id="scheduleTime_${todo.id}" value="${todo.plannedTime || ""}" />
+              </div>
+            </div>
+            <div class="schedule-actions" style="margin-top: 12px;">
+              <button class="btn btn-primary" data-action="schedule">Planung speichern</button>
+              <button class="btn btn-warning" data-action="tomorrow">Auf morgen schieben</button>
+              <button class="btn btn-gray" data-action="clearSchedule">Auf heute ohne Uhrzeit</button>
+            </div>
           </div>
 
           <div class="todo-actions">
@@ -1112,6 +1291,9 @@
           if (action === "reopen") reopenTodo(todo.id);
           if (action === "delete") deleteTodo(todo.id);
           if (action === "calendar") downloadCalendarFile(todo);
+          if (action === "schedule") saveSchedule(todo.id);
+          if (action === "clearSchedule") clearSchedule(todo.id);
+          if (action === "tomorrow") moveToTomorrow(todo.id);
         });
       });
 
@@ -1122,22 +1304,22 @@
       const today = getTodayString();
       todayLabel.textContent = `Heute: ${formatDateGerman(today)}`;
 
-      const todayTodos = todos.filter(todo => (todo.dueDate || todo.date) === today);
+      const todayTodos = todos.filter(todo => (todo.plannedDate || todo.date) === today);
       const openTodos = sortTodos(todayTodos.filter(todo => !todo.done));
       const doneTodos = sortTodos(todayTodos.filter(todo => todo.done));
-      const scheduledTodos = todos.filter(todo => todo.dueDate || todo.date);
+      const scheduledTodos = todos.filter(todo => todo.plannedDate || todo.date);
 
       openTodosContainer.innerHTML = "";
       doneTodosContainer.innerHTML = "";
 
       if (openTodos.length === 0) {
-        openTodosContainer.innerHTML = `<div class="empty">Keine offenen Aufgaben für heute.</div>`;
+        openTodosContainer.innerHTML = `<div class="empty">Keine offenen Einträge für heute.</div>`;
       } else {
         openTodos.forEach(todo => openTodosContainer.appendChild(createTodoElement(todo)));
       }
 
       if (doneTodos.length === 0) {
-        doneTodosContainer.innerHTML = `<div class="empty">Noch keine erledigten Aufgaben für heute.</div>`;
+        doneTodosContainer.innerHTML = `<div class="empty">Noch keine erledigten Einträge für heute.</div>`;
       } else {
         doneTodos.forEach(todo => doneTodosContainer.appendChild(createTodoElement(todo)));
       }
@@ -1172,7 +1354,7 @@
       for (let day = 1; day <= lastDay.getDate(); day++) {
         const date = new Date(year, month, day);
         const dateString = toDateStringLocal(date);
-        const dayTodos = sortTodos(todos.filter(todo => (todo.dueDate || todo.date) === dateString));
+        const dayTodos = sortTodos(todos.filter(todo => (todo.plannedDate || todo.date) === dateString));
 
         const dayElement = document.createElement("div");
         dayElement.className = "calendar-day";
@@ -1203,22 +1385,27 @@
     }
 
     function renderAgenda(todos) {
-      const dayTodos = sortTodos(todos.filter(todo => (todo.dueDate || todo.date) === selectedDate));
+      const dayTodos = sortTodos(todos.filter(todo => (todo.plannedDate || todo.date) === selectedDate));
       selectedDayTitle.textContent = formatDateGerman(selectedDate);
       selectedDayCount.textContent = dayTodos.length;
       agendaList.innerHTML = "";
 
       if (dayTodos.length === 0) {
-        agendaList.innerHTML = `<div class="empty">Keine Termine an diesem Tag.</div>`;
+        agendaList.innerHTML = `<div class="empty">Keine Einträge an diesem Tag.</div>`;
         return;
       }
 
       dayTodos.forEach(todo => {
+        const type = todo.type || "task";
         const item = document.createElement("div");
         item.className = "agenda-item";
         item.innerHTML = `
+          <div class="badge-row" style="margin-bottom: 8px;">
+            <span class="badge ${getTypeClass(type)}">${getTypeText(type)}</span>
+            <span class="badge ${getPriorityClass(todo.priority)}">${getPriorityText(todo.priority)}</span>
+          </div>
           <div class="agenda-title">${escapeHtml(todo.title)}</div>
-          <div class="agenda-time">${formatDateTimeGerman(todo.dueDate || todo.date, todo.dueTime)}</div>
+          <div class="agenda-time">${formatDateTimeGerman(todo.plannedDate || todo.date, todo.plannedTime)}</div>
           <button class="btn btn-calendar" type="button">Zum Kalender hinzufügen</button>
         `;
         item.querySelector("button").addEventListener("click", () => downloadCalendarFile(todo));
@@ -1248,25 +1435,20 @@
     todoForm.addEventListener("submit", event => {
       event.preventDefault();
 
+      const selectedType = document.querySelector('input[name="itemType"]:checked').value;
       const title = todoTitle.value.trim();
       const priority = todoPriority.value;
       const description = todoDescription.value.trim();
-      const dueDate = todoDueDate.value;
-      const dueTime = todoDueTime.value;
 
       if (!title) {
-        alert("Bitte gib eine Aufgabe ein.");
+        alert("Bitte gib einen Titel ein.");
         return;
       }
 
-      if (dueTime && !dueDate) {
-        alert("Bitte wähle auch ein Datum aus, wenn du eine Uhrzeit angibst.");
-        return;
-      }
-
-      addTodo(title, priority, description, dueDate, dueTime);
+      addTodo(title, priority, description, selectedType);
       todoForm.reset();
       todoPriority.value = "high";
+      document.querySelector('input[name="itemType"][value="task"]').checked = true;
       todoTitle.focus();
     });
 
