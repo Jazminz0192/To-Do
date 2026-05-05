@@ -3,46 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Arbeits-To-do-App Dark Mode</title>
+  <title>Arbeits-To-do-App</title>
 
   <style>
     :root {
-      --bg-main: #070b16;
-      --bg-card: rgba(15, 23, 42, 0.92);
-      --bg-card-solid: #111827;
-      --bg-input: #0f172a;
-      --bg-soft: #1e293b;
-
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-soft: #cbd5e1;
-
+      --bg: #050816;
+      --card: rgba(15, 23, 42, 0.88);
+      --input: #0f172a;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --soft: #cbd5e1;
       --border: rgba(148, 163, 184, 0.22);
-      --border-strong: rgba(148, 163, 184, 0.35);
-
       --primary: #8b5cf6;
-      --primary-hover: #7c3aed;
-      --primary-soft: rgba(139, 92, 246, 0.16);
-
+      --primary2: #2563eb;
       --success: #22c55e;
-      --success-hover: #16a34a;
-
       --danger: #ef4444;
-      --danger-hover: #dc2626;
-
-      --gray-btn: #475569;
-      --gray-btn-hover: #334155;
-
+      --gray: #475569;
       --high-bg: rgba(239, 68, 68, 0.18);
       --high-text: #fca5a5;
-
       --medium-bg: rgba(245, 158, 11, 0.18);
       --medium-text: #fcd34d;
-
       --low-bg: rgba(34, 197, 94, 0.18);
       --low-text: #86efac;
-
-      --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
     }
 
     * {
@@ -58,13 +41,12 @@
         radial-gradient(circle at top left, rgba(139, 92, 246, 0.24), transparent 32%),
         radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.18), transparent 30%),
         linear-gradient(135deg, #020617 0%, #070b16 45%, #111827 100%);
-      color: var(--text-main);
+      color: var(--text);
       padding: 28px;
     }
 
     .container {
-      width: 100%;
-      max-width: 1100px;
+      max-width: 1180px;
       margin: 0 auto;
     }
 
@@ -72,17 +54,14 @@
       overflow: hidden;
       border-radius: 30px;
       background: rgba(15, 23, 42, 0.72);
-      border: 1px solid rgba(148, 163, 184, 0.22);
+      border: 1px solid var(--border);
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
     }
 
     .hero {
       padding: 38px 36px 28px;
-      background:
-        linear-gradient(135deg, rgba(139, 92, 246, 0.95), rgba(37, 99, 235, 0.92)),
-        radial-gradient(circle at top right, rgba(255, 255, 255, 0.25), transparent 30%);
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.96), rgba(37, 99, 235, 0.92));
     }
 
     .hero-top {
@@ -102,32 +81,35 @@
       background: rgba(255, 255, 255, 0.16);
       border: 1px solid rgba(255, 255, 255, 0.25);
       font-size: 26px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .open-calendar-btn {
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      color: white;
+      font-weight: 900;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .open-calendar-btn:hover {
+      background: rgba(255, 255, 255, 0.24);
+      transform: translateY(-1px);
     }
 
     .hero h1 {
-      font-size: 2.2rem;
-      line-height: 1.1;
+      font-size: 2.25rem;
       letter-spacing: -0.04em;
       margin-bottom: 10px;
     }
 
     .hero p {
-      max-width: 780px;
-      line-height: 1.65;
+      max-width: 880px;
       color: rgba(255, 255, 255, 0.88);
-      font-size: 1rem;
-    }
-
-    .mode-chip {
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.16);
-      border: 1px solid rgba(255, 255, 255, 0.24);
-      color: white;
-      font-weight: 700;
-      white-space: nowrap;
-      font-size: 0.9rem;
+      line-height: 1.65;
     }
 
     .content {
@@ -136,20 +118,18 @@
 
     .date-chip {
       display: inline-flex;
-      align-items: center;
-      gap: 8px;
       padding: 11px 15px;
       border-radius: 999px;
-      background: var(--primary-soft);
+      background: rgba(139, 92, 246, 0.16);
       color: #ddd6fe;
       border: 1px solid rgba(139, 92, 246, 0.28);
-      font-weight: 800;
+      font-weight: 900;
       margin-bottom: 24px;
     }
 
     .top-grid {
       display: grid;
-      grid-template-columns: 1.25fr 0.85fr;
+      grid-template-columns: 1.2fr 0.8fr;
       gap: 24px;
       align-items: start;
       margin-bottom: 30px;
@@ -157,24 +137,29 @@
 
     .panel,
     .stat-card,
-    .todo {
-      background: var(--bg-card);
+    .todo,
+    .calendar-panel,
+    .agenda-panel {
+      background: var(--card);
       border: 1px solid var(--border);
-      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.20);
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.2);
     }
 
-    .panel {
+    .panel,
+    .calendar-panel,
+    .agenda-panel {
       border-radius: 26px;
     }
 
-    .panel-inner {
+    .panel-inner,
+    .calendar-inner,
+    .agenda-inner {
       padding: 24px;
     }
 
     .panel-title {
       font-size: 1.15rem;
       margin-bottom: 18px;
-      letter-spacing: -0.02em;
     }
 
     form {
@@ -187,8 +172,14 @@
       gap: 8px;
     }
 
-    .field label {
-      color: var(--text-soft);
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    label {
+      color: var(--soft);
       font-size: 0.94rem;
       font-weight: 800;
     }
@@ -198,13 +189,14 @@
     textarea {
       width: 100%;
       border: 1px solid var(--border);
-      background: var(--bg-input);
-      color: var(--text-main);
+      background: var(--input);
+      color: var(--text);
       border-radius: 17px;
       padding: 14px 16px;
       font-size: 15px;
       outline: none;
       transition: 0.2s ease;
+      color-scheme: dark;
     }
 
     input::placeholder,
@@ -219,10 +211,6 @@
       box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.16);
     }
 
-    select {
-      cursor: pointer;
-    }
-
     textarea {
       min-height: 112px;
       resize: vertical;
@@ -234,51 +222,26 @@
       border-radius: 17px;
       padding: 13px 18px;
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 900;
       cursor: pointer;
       transition: 0.2s ease;
+      color: white;
     }
 
     .btn:hover {
       transform: translateY(-1px);
+      filter: brightness(1.05);
     }
 
     .btn-primary {
-      color: white;
-      background: linear-gradient(135deg, var(--primary), #2563eb);
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
       box-shadow: 0 14px 28px rgba(139, 92, 246, 0.24);
     }
 
-    .btn-primary:hover {
-      background: linear-gradient(135deg, var(--primary-hover), #1d4ed8);
-    }
-
-    .btn-success {
-      background: var(--success);
-      color: white;
-    }
-
-    .btn-success:hover {
-      background: var(--success-hover);
-    }
-
-    .btn-danger {
-      background: var(--danger);
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: var(--danger-hover);
-    }
-
-    .btn-gray {
-      background: var(--gray-btn);
-      color: white;
-    }
-
-    .btn-gray:hover {
-      background: var(--gray-btn-hover);
-    }
+    .btn-success { background: var(--success); }
+    .btn-danger { background: var(--danger); }
+    .btn-gray { background: var(--gray); }
+    .btn-calendar { background: linear-gradient(135deg, #06b6d4, #2563eb); }
 
     .stats {
       display: grid;
@@ -286,25 +249,12 @@
     }
 
     .stat-card {
-      position: relative;
-      overflow: hidden;
       border-radius: 24px;
       padding: 20px;
     }
 
-    .stat-card::after {
-      content: "";
-      position: absolute;
-      top: -45px;
-      right: -45px;
-      width: 115px;
-      height: 115px;
-      border-radius: 50%;
-      background: rgba(139, 92, 246, 0.14);
-    }
-
     .stat-label {
-      color: var(--text-muted);
+      color: var(--muted);
       font-weight: 800;
       margin-bottom: 8px;
     }
@@ -312,7 +262,13 @@
     .stat-number {
       font-size: 2.2rem;
       font-weight: 900;
-      letter-spacing: -0.04em;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-items: start;
     }
 
     .sections {
@@ -320,7 +276,8 @@
       gap: 30px;
     }
 
-    .section-header {
+    .section-header,
+    .calendar-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -328,9 +285,9 @@
       margin-bottom: 14px;
     }
 
-    .section-header h2 {
+    .section-header h2,
+    .calendar-header h2 {
       font-size: 1.2rem;
-      letter-spacing: -0.02em;
     }
 
     .section-count {
@@ -338,13 +295,14 @@
       text-align: center;
       padding: 8px 12px;
       border-radius: 999px;
-      background: var(--primary-soft);
+      background: rgba(139, 92, 246, 0.16);
       color: #ddd6fe;
       border: 1px solid rgba(139, 92, 246, 0.22);
       font-weight: 900;
     }
 
-    .todo-list {
+    .todo-list,
+    .agenda-list {
       display: grid;
       gap: 14px;
     }
@@ -357,7 +315,6 @@
 
     .todo:hover {
       transform: translateY(-2px);
-      border-color: var(--border-strong);
       box-shadow: 0 22px 50px rgba(0, 0, 0, 0.28);
     }
 
@@ -379,10 +336,17 @@
     }
 
     .todo-title {
-      color: var(--text-main);
+      color: var(--text);
       font-weight: 900;
       word-break: break-word;
       line-height: 1.35;
+    }
+
+    .todo-subline {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 700;
     }
 
     .badge {
@@ -415,7 +379,7 @@
     }
 
     .expand-text {
-      color: var(--text-muted);
+      color: var(--muted);
       font-size: 0.9rem;
       font-weight: 800;
       white-space: nowrap;
@@ -446,20 +410,18 @@
       border: 1px solid var(--border);
     }
 
-    .detail-item.full {
-      grid-column: 1 / -1;
-    }
+    .detail-item.full { grid-column: 1 / -1; }
 
     .detail-label {
       display: block;
-      color: var(--text-muted);
+      color: var(--muted);
       font-size: 0.86rem;
       font-weight: 900;
       margin-bottom: 7px;
     }
 
     .detail-value {
-      color: var(--text-soft);
+      color: var(--soft);
       line-height: 1.65;
       word-break: break-word;
     }
@@ -475,9 +437,7 @@
       text-decoration: line-through;
     }
 
-    .done {
-      opacity: 0.82;
-    }
+    .done { opacity: 0.82; }
 
     .empty {
       text-align: center;
@@ -485,59 +445,209 @@
       border-radius: 22px;
       background: rgba(15, 23, 42, 0.72);
       border: 1px dashed rgba(148, 163, 184, 0.35);
-      color: var(--text-muted);
+      color: var(--muted);
       font-weight: 800;
     }
 
-    @media (max-width: 900px) {
-      .top-grid {
-        grid-template-columns: 1fr;
-      }
+    .calendar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.62);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.25s ease;
+      z-index: 50;
+    }
+
+    .calendar-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .calendar-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(650px, 94vw);
+      height: 100vh;
+      overflow-y: auto;
+      background: rgba(15, 23, 42, 0.98);
+      border-left: 1px solid var(--border);
+      box-shadow: -24px 0 70px rgba(0, 0, 0, 0.45);
+      transform: translateX(105%);
+      transition: 0.28s ease;
+      z-index: 60;
+      padding: 22px;
+    }
+
+    .calendar-drawer.show {
+      transform: translateX(0);
+    }
+
+    .drawer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .drawer-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+    }
+
+    .close-calendar-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(30, 41, 59, 0.9);
+      color: white;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .calendar-area {
+      display: grid;
+      gap: 24px;
+    }
+
+    .calendar-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .calendar-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .calendar-month {
+      min-width: 150px;
+      text-align: center;
+      color: var(--soft);
+      font-weight: 900;
+    }
+
+    .calendar-weekdays,
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .calendar-weekdays {
+      margin-bottom: 8px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    .calendar-day {
+      min-height: 92px;
+      padding: 9px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .calendar-day:hover {
+      border-color: rgba(139, 92, 246, 0.55);
+      background: rgba(30, 41, 59, 0.92);
+    }
+
+    .calendar-day.today {
+      border-color: rgba(139, 92, 246, 0.75);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.16);
+    }
+
+    .calendar-day.selected {
+      background: rgba(139, 92, 246, 0.22);
+      border-color: rgba(139, 92, 246, 0.72);
+    }
+
+    .calendar-day.empty-day {
+      opacity: 0.28;
+      cursor: default;
+    }
+
+    .day-number {
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .calendar-task {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-top: 4px;
+      padding: 4px 6px;
+      border-radius: 8px;
+      background: rgba(37, 99, 235, 0.18);
+      color: #bfdbfe;
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+
+    .more-tasks {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .agenda-item {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid var(--border);
+    }
+
+    .agenda-title {
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .agenda-time {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 980px) {
+      .top-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 680px) {
-      body {
-        padding: 14px;
-      }
-
-      .hero {
-        padding: 26px 20px 22px;
-      }
-
-      .hero-top {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .hero h1 {
-        font-size: 1.75rem;
-      }
-
-      .content {
-        padding: 18px;
-      }
-
-      .todo-header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .todo-left {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .detail-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .todo-actions {
-        flex-direction: column;
-      }
-
-      .todo-actions .btn {
-        width: 100%;
-      }
+      body { padding: 14px; }
+      .hero { padding: 26px 20px 22px; }
+      .hero-top { align-items: flex-start; flex-direction: column; }
+      .hero h1 { font-size: 1.75rem; }
+      .content { padding: 18px; }
+      .field-row { grid-template-columns: 1fr; }
+      .todo-header { align-items: flex-start; flex-direction: column; }
+      .todo-left { align-items: flex-start; flex-direction: column; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .todo-actions { flex-direction: column; }
+      .todo-actions .btn { width: 100%; }
+      .calendar-day { min-height: 72px; padding: 7px; }
+      .calendar-task { display: none; }
+      .calendar-month { min-width: 115px; }
     }
   </style>
 </head>
@@ -548,14 +658,13 @@
       <header class="hero">
         <div class="hero-top">
           <div class="app-icon">✓</div>
-          <div class="mode-chip">Dark Mode</div>
+          <button class="open-calendar-btn" id="openCalendarBtn" type="button">Kalender öffnen</button>
         </div>
 
         <h1>Arbeits-To-do-App</h1>
         <p>
-          Trage ein, was heute erledigt werden muss. Nicht geschaffte Aufgaben werden automatisch
-          auf den nächsten Tag verschoben. Aufgaben werden nach Priorität sortiert und lassen sich
-          per Klick öffnen, um weitere Informationen anzuzeigen.
+          Trage Aufgaben ein, terminiere sie mit Datum und Uhrzeit und sieh alle Termine im Kalender.
+          Offene Aufgaben von früher werden automatisch auf heute verschoben, außer sie haben einen Termin in der Zukunft.
         </p>
       </header>
 
@@ -570,12 +679,7 @@
               <form id="todoForm">
                 <div class="field">
                   <label for="todoTitle">Aufgabe</label>
-                  <input
-                    type="text"
-                    id="todoTitle"
-                    placeholder="Zum Beispiel: Angebot für Kunden fertigstellen"
-                    required
-                  />
+                  <input type="text" id="todoTitle" placeholder="Zum Beispiel: Angebot für Kunden fertigstellen" required />
                 </div>
 
                 <div class="field">
@@ -587,12 +691,21 @@
                   </select>
                 </div>
 
+                <div class="field-row">
+                  <div class="field">
+                    <label for="todoDueDate">Termin-Datum</label>
+                    <input type="date" id="todoDueDate" />
+                  </div>
+
+                  <div class="field">
+                    <label for="todoDueTime">Termin-Uhrzeit</label>
+                    <input type="time" id="todoDueTime" />
+                  </div>
+                </div>
+
                 <div class="field">
                   <label for="todoDescription">Weitere Informationen</label>
-                  <textarea
-                    id="todoDescription"
-                    placeholder="Zusätzliche Notizen, Ansprechpartner, Deadlines oder Details"
-                  ></textarea>
+                  <textarea id="todoDescription" placeholder="Zusätzliche Notizen, Ansprechpartner, Deadlines oder Details"></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Aufgabe hinzufügen</button>
@@ -602,68 +715,130 @@
 
           <aside class="stats">
             <div class="stat-card">
-              <div class="stat-label">Offene Aufgaben</div>
+              <div class="stat-label">Heute offen</div>
               <div class="stat-number" id="openCount">0</div>
             </div>
-
             <div class="stat-card">
-              <div class="stat-label">Erledigte Aufgaben</div>
+              <div class="stat-label">Heute erledigt</div>
               <div class="stat-number" id="doneCount">0</div>
             </div>
-
             <div class="stat-card">
-              <div class="stat-label">Gesamt heute</div>
-              <div class="stat-number" id="totalCount">0</div>
+              <div class="stat-label">Termine gesamt</div>
+              <div class="stat-number" id="scheduledCount">0</div>
             </div>
           </aside>
         </div>
 
-        <div class="sections">
-          <section>
-            <div class="section-header">
-              <h2>Offene Aufgaben</h2>
-              <div class="section-count" id="openSectionCount">0</div>
-            </div>
-            <div id="openTodos" class="todo-list"></div>
-          </section>
+        <div class="main-grid">
+          <div class="sections">
+            <section>
+              <div class="section-header">
+                <h2>Heute fällig / offen</h2>
+                <div class="section-count" id="openSectionCount">0</div>
+              </div>
+              <div id="openTodos" class="todo-list"></div>
+            </section>
 
-          <section>
-            <div class="section-header">
-              <h2>Erledigte Aufgaben</h2>
-              <div class="section-count" id="doneSectionCount">0</div>
-            </div>
-            <div id="doneTodos" class="todo-list"></div>
-          </section>
+            <section>
+              <div class="section-header">
+                <h2>Heute erledigt</h2>
+                <div class="section-count" id="doneSectionCount">0</div>
+              </div>
+              <div id="doneTodos" class="todo-list"></div>
+            </section>
+          </div>
         </div>
       </main>
     </div>
   </div>
 
+  <div class="calendar-overlay" id="calendarOverlay"></div>
+
+  <aside class="calendar-drawer" id="calendarDrawer">
+    <div class="drawer-top">
+      <div class="drawer-title">Kalender</div>
+      <button class="close-calendar-btn" id="closeCalendarBtn" type="button">×</button>
+    </div>
+
+    <div class="calendar-area">
+      <section class="calendar-panel">
+        <div class="calendar-inner">
+          <div class="calendar-header">
+            <h2>Monatsübersicht</h2>
+            <div class="calendar-controls">
+              <button class="calendar-btn" id="prevMonth" type="button">‹</button>
+              <div class="calendar-month" id="calendarMonth"></div>
+              <button class="calendar-btn" id="nextMonth" type="button">›</button>
+            </div>
+          </div>
+
+          <div class="calendar-weekdays">
+            <div>Mo</div><div>Di</div><div>Mi</div><div>Do</div><div>Fr</div><div>Sa</div><div>So</div>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+      </section>
+
+      <section class="agenda-panel">
+        <div class="agenda-inner">
+          <div class="section-header">
+            <h2 id="selectedDayTitle">Termine</h2>
+            <div class="section-count" id="selectedDayCount">0</div>
+          </div>
+          <div id="agendaList" class="agenda-list"></div>
+        </div>
+      </section>
+    </div>
+  </aside>
+
   <script>
-    const STORAGE_KEY = "arbeits_todos_dark_mode";
+    const STORAGE_KEY = "arbeits_todos_dark_calendar_v2";
 
     const todoForm = document.getElementById("todoForm");
     const todoTitle = document.getElementById("todoTitle");
     const todoPriority = document.getElementById("todoPriority");
+    const todoDueDate = document.getElementById("todoDueDate");
+    const todoDueTime = document.getElementById("todoDueTime");
     const todoDescription = document.getElementById("todoDescription");
 
     const openTodosContainer = document.getElementById("openTodos");
     const doneTodosContainer = document.getElementById("doneTodos");
+    const agendaList = document.getElementById("agendaList");
 
     const openCount = document.getElementById("openCount");
     const doneCount = document.getElementById("doneCount");
-    const totalCount = document.getElementById("totalCount");
-
+    const scheduledCount = document.getElementById("scheduledCount");
     const openSectionCount = document.getElementById("openSectionCount");
     const doneSectionCount = document.getElementById("doneSectionCount");
+    const selectedDayCount = document.getElementById("selectedDayCount");
 
     const todayLabel = document.getElementById("todayLabel");
+    const calendarGrid = document.getElementById("calendarGrid");
+    const calendarMonth = document.getElementById("calendarMonth");
+    const selectedDayTitle = document.getElementById("selectedDayTitle");
+    const prevMonth = document.getElementById("prevMonth");
+    const nextMonth = document.getElementById("nextMonth");
+
+    const openCalendarBtn = document.getElementById("openCalendarBtn");
+    const closeCalendarBtn = document.getElementById("closeCalendarBtn");
+    const calendarOverlay = document.getElementById("calendarOverlay");
+    const calendarDrawer = document.getElementById("calendarDrawer");
+
+    let calendarDate = new Date();
+    let selectedDate = getTodayString();
 
     function getTodayString() {
       const today = new Date();
       const year = today.getFullYear();
       const month = String(today.getMonth() + 1).padStart(2, "0");
       const day = String(today.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function toDateStringLocal(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
     }
 
@@ -677,8 +852,19 @@
       });
     }
 
-    function formatDateTimeGerman(dateTimeString) {
-      return new Date(dateTimeString).toLocaleString("de-DE");
+    function formatDateTimeGerman(dateString, timeString) {
+      if (!dateString) return "Kein Termin gesetzt";
+      if (!timeString) return formatDateGerman(dateString);
+
+      const date = new Date(`${dateString}T${timeString}`);
+      return date.toLocaleString("de-DE", {
+        weekday: "long",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
     }
 
     function loadTodos() {
@@ -695,11 +881,15 @@
       let changed = false;
 
       const updatedTodos = todos.map(todo => {
-        if (!todo.done && todo.date < today) {
+        const dueDate = todo.dueDate || todo.date;
+        const isScheduledFuture = dueDate && dueDate > today;
+
+        if (!todo.done && todo.date < today && !isScheduledFuture) {
           changed = true;
           return {
             ...todo,
             date: today,
+            dueDate: today,
             movedCount: (todo.movedCount || 0) + 1
           };
         }
@@ -707,10 +897,7 @@
         return todo;
       });
 
-      if (changed) {
-        saveTodos(updatedTodos);
-      }
-
+      if (changed) saveTodos(updatedTodos);
       return updatedTodos;
     }
 
@@ -732,36 +919,39 @@
       return 3;
     }
 
-    function sortTodosByPriority(todos) {
+    function sortTodos(todos) {
       return todos.sort((a, b) => {
-        const priorityDifference = getPriorityValue(a.priority) - getPriorityValue(b.priority);
+        const dateA = `${a.dueDate || a.date}T${a.dueTime || "23:59"}`;
+        const dateB = `${b.dueDate || b.date}T${b.dueTime || "23:59"}`;
+        const dateDiff = new Date(dateA) - new Date(dateB);
+        if (dateDiff !== 0) return dateDiff;
 
-        if (priorityDifference !== 0) {
-          return priorityDifference;
-        }
+        const priorityDiff = getPriorityValue(a.priority) - getPriorityValue(b.priority);
+        if (priorityDiff !== 0) return priorityDiff;
 
         return new Date(a.createdAt) - new Date(b.createdAt);
       });
     }
 
     function createId() {
-      if (window.crypto && crypto.randomUUID) {
-        return crypto.randomUUID();
-      }
-
+      if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
       return String(Date.now() + Math.random());
     }
 
-    function addTodo(title, priority, description) {
+    function addTodo(title, priority, description, dueDate, dueTime) {
       const todos = loadTodos();
+      const today = getTodayString();
+      const taskDate = dueDate || today;
 
       const newTodo = {
         id: createId(),
-        title: title,
-        priority: priority,
-        description: description,
+        title,
+        priority,
+        description,
         done: false,
-        date: getTodayString(),
+        date: taskDate,
+        dueDate: taskDate,
+        dueTime: dueTime || "",
         createdAt: new Date().toISOString(),
         doneAt: null,
         movedCount: 0
@@ -769,67 +959,108 @@
 
       todos.push(newTodo);
       saveTodos(todos);
-      renderTodos();
+      renderApp();
     }
 
     function markAsDone(id) {
       const todos = loadTodos().map(todo => {
         if (todo.id === id) {
-          return {
-            ...todo,
-            done: true,
-            doneAt: new Date().toISOString()
-          };
+          return { ...todo, done: true, doneAt: new Date().toISOString() };
         }
-
         return todo;
       });
-
       saveTodos(todos);
-      renderTodos();
+      renderApp();
     }
 
     function reopenTodo(id) {
       const todos = loadTodos().map(todo => {
         if (todo.id === id) {
-          return {
-            ...todo,
-            done: false,
-            doneAt: null,
-            date: getTodayString()
-          };
+          return { ...todo, done: false, doneAt: null };
         }
-
         return todo;
       });
-
       saveTodos(todos);
-      renderTodos();
+      renderApp();
     }
 
     function deleteTodo(id) {
       const todos = loadTodos().filter(todo => todo.id !== id);
       saveTodos(todos);
-      renderTodos();
+      renderApp();
     }
 
     function escapeHtml(text) {
       const div = document.createElement("div");
-      div.textContent = text;
+      div.textContent = text || "";
       return div.innerHTML;
+    }
+
+    function createIcsDate(dateString, timeString) {
+      const safeTime = timeString || "09:00";
+      const date = new Date(`${dateString}T${safeTime}:00`);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hour = String(date.getHours()).padStart(2, "0");
+      const minute = String(date.getMinutes()).padStart(2, "0");
+      return `${year}${month}${day}T${hour}${minute}00`;
+    }
+
+    function downloadCalendarFile(todo) {
+      const dueDate = todo.dueDate || todo.date || getTodayString();
+      const startTime = todo.dueTime || "09:00";
+      const start = createIcsDate(dueDate, startTime);
+
+      const startDate = new Date(`${dueDate}T${startTime}:00`);
+      const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+      const endDateString = toDateStringLocal(endDate);
+      const endTimeString = String(endDate.getHours()).padStart(2, "0") + ":" + String(endDate.getMinutes()).padStart(2, "0");
+      const end = createIcsDate(endDateString, endTimeString);
+
+      const title = String(todo.title || "Termin").replace(/,/g, "\\,").replace(/;/g, "\\;");
+      const description = String(todo.description || "").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
+
+      const icsContent = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Arbeits Todo App//DE",
+        "BEGIN:VEVENT",
+        `UID:${todo.id}@arbeits-todo-app`,
+        `DTSTAMP:${createIcsDate(getTodayString(), "09:00")}`,
+        `DTSTART:${start}`,
+        `DTEND:${end}`,
+        `SUMMARY:${title}`,
+        `DESCRIPTION:${description}`,
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ].join("\r\n");
+
+      const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${String(todo.title || "termin").replace(/[^a-z0-9äöüß\-_ ]/gi, "").trim() || "termin"}.ics`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     }
 
     function createTodoElement(todo) {
       const todoElement = document.createElement("article");
       todoElement.className = todo.done ? "todo done" : "todo";
+      const dueDate = todo.dueDate || todo.date || getTodayString();
 
       todoElement.innerHTML = `
         <div class="todo-header">
           <div class="todo-left">
             <span class="badge ${getPriorityClass(todo.priority)}">${getPriorityText(todo.priority)}</span>
-            <div class="todo-title">${escapeHtml(todo.title)}</div>
+            <div>
+              <div class="todo-title">${escapeHtml(todo.title)}</div>
+              <div class="todo-subline">${formatDateTimeGerman(dueDate, todo.dueTime)}</div>
+            </div>
           </div>
-
           <span class="expand-text">Details öffnen</span>
         </div>
 
@@ -837,30 +1068,24 @@
           <div class="detail-grid">
             <div class="detail-item full">
               <span class="detail-label">Weitere Informationen</span>
-              <div class="detail-value">
-                ${todo.description ? escapeHtml(todo.description).replace(/\n/g, "<br>") : "Keine weiteren Informationen vorhanden."}
-              </div>
+              <div class="detail-value">${todo.description ? escapeHtml(todo.description).replace(/\n/g, "<br>") : "Keine weiteren Informationen vorhanden."}</div>
             </div>
-
             <div class="detail-item">
-              <span class="detail-label">Datum</span>
-              <div class="detail-value">${formatDateGerman(todo.date)}</div>
+              <span class="detail-label">Termin</span>
+              <div class="detail-value">${formatDateTimeGerman(dueDate, todo.dueTime)}</div>
             </div>
-
-            <div class="detail-item">
-              <span class="detail-label">Erstellt am</span>
-              <div class="detail-value">${formatDateTimeGerman(todo.createdAt)}</div>
-            </div>
-
             <div class="detail-item">
               <span class="detail-label">Schon verschoben</span>
               <div class="detail-value">${todo.movedCount || 0} mal</div>
             </div>
-
+            <div class="detail-item">
+              <span class="detail-label">Erstellt am</span>
+              <div class="detail-value">${new Date(todo.createdAt).toLocaleString("de-DE")}</div>
+            </div>
             ${todo.doneAt ? `
               <div class="detail-item">
                 <span class="detail-label">Erledigt am</span>
-                <div class="detail-value">${formatDateTimeGerman(todo.doneAt)}</div>
+                <div class="detail-value">${new Date(todo.doneAt).toLocaleString("de-DE")}</div>
               </div>
             ` : ""}
           </div>
@@ -868,52 +1093,39 @@
           <div class="todo-actions">
             ${todo.done
               ? `<button class="btn btn-gray" data-action="reopen">Wieder öffnen</button>`
-              : `<button class="btn btn-success" data-action="done">Als erledigt markieren</button>`
-            }
+              : `<button class="btn btn-success" data-action="done">Als erledigt markieren</button>`}
+            <button class="btn btn-calendar" data-action="calendar">Zum Kalender hinzufügen</button>
             <button class="btn btn-danger" data-action="delete">Löschen</button>
           </div>
         </div>
       `;
 
-      const header = todoElement.querySelector(".todo-header");
-      header.addEventListener("click", () => {
+      todoElement.querySelector(".todo-header").addEventListener("click", () => {
         todoElement.classList.toggle("open");
       });
 
-      const buttons = todoElement.querySelectorAll("button");
-      buttons.forEach(button => {
+      todoElement.querySelectorAll("button").forEach(button => {
         button.addEventListener("click", event => {
           event.stopPropagation();
-
           const action = button.dataset.action;
-
-          if (action === "done") {
-            markAsDone(todo.id);
-          }
-
-          if (action === "reopen") {
-            reopenTodo(todo.id);
-          }
-
-          if (action === "delete") {
-            deleteTodo(todo.id);
-          }
+          if (action === "done") markAsDone(todo.id);
+          if (action === "reopen") reopenTodo(todo.id);
+          if (action === "delete") deleteTodo(todo.id);
+          if (action === "calendar") downloadCalendarFile(todo);
         });
       });
 
       return todoElement;
     }
 
-    function renderTodos() {
-      let todos = loadTodos();
-      todos = moveUnfinishedTasksToToday(todos);
-
+    function renderTodos(todos) {
       const today = getTodayString();
       todayLabel.textContent = `Heute: ${formatDateGerman(today)}`;
 
-      const todayTodos = todos.filter(todo => todo.date === today);
-      const openTodos = sortTodosByPriority(todayTodos.filter(todo => !todo.done));
-      const doneTodos = sortTodosByPriority(todayTodos.filter(todo => todo.done));
+      const todayTodos = todos.filter(todo => (todo.dueDate || todo.date) === today);
+      const openTodos = sortTodos(todayTodos.filter(todo => !todo.done));
+      const doneTodos = sortTodos(todayTodos.filter(todo => todo.done));
+      const scheduledTodos = todos.filter(todo => todo.dueDate || todo.date);
 
       openTodosContainer.innerHTML = "";
       doneTodosContainer.innerHTML = "";
@@ -921,24 +1133,116 @@
       if (openTodos.length === 0) {
         openTodosContainer.innerHTML = `<div class="empty">Keine offenen Aufgaben für heute.</div>`;
       } else {
-        openTodos.forEach(todo => {
-          openTodosContainer.appendChild(createTodoElement(todo));
-        });
+        openTodos.forEach(todo => openTodosContainer.appendChild(createTodoElement(todo)));
       }
 
       if (doneTodos.length === 0) {
-        doneTodosContainer.innerHTML = `<div class="empty">Noch keine erledigten Aufgaben.</div>`;
+        doneTodosContainer.innerHTML = `<div class="empty">Noch keine erledigten Aufgaben für heute.</div>`;
       } else {
-        doneTodos.forEach(todo => {
-          doneTodosContainer.appendChild(createTodoElement(todo));
-        });
+        doneTodos.forEach(todo => doneTodosContainer.appendChild(createTodoElement(todo)));
       }
 
       openCount.textContent = openTodos.length;
       doneCount.textContent = doneTodos.length;
-      totalCount.textContent = todayTodos.length;
+      scheduledCount.textContent = scheduledTodos.length;
       openSectionCount.textContent = openTodos.length;
       doneSectionCount.textContent = doneTodos.length;
+    }
+
+    function renderCalendar(todos) {
+      calendarGrid.innerHTML = "";
+
+      const year = calendarDate.getFullYear();
+      const month = calendarDate.getMonth();
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const startOffset = (firstDay.getDay() + 6) % 7;
+
+      calendarMonth.textContent = firstDay.toLocaleDateString("de-DE", {
+        month: "long",
+        year: "numeric"
+      });
+
+      for (let i = 0; i < startOffset; i++) {
+        const empty = document.createElement("div");
+        empty.className = "calendar-day empty-day";
+        calendarGrid.appendChild(empty);
+      }
+
+      for (let day = 1; day <= lastDay.getDate(); day++) {
+        const date = new Date(year, month, day);
+        const dateString = toDateStringLocal(date);
+        const dayTodos = sortTodos(todos.filter(todo => (todo.dueDate || todo.date) === dateString));
+
+        const dayElement = document.createElement("div");
+        dayElement.className = "calendar-day";
+        if (dateString === getTodayString()) dayElement.classList.add("today");
+        if (dateString === selectedDate) dayElement.classList.add("selected");
+
+        const visibleTasks = dayTodos
+          .slice(0, 2)
+          .map(todo => `<span class="calendar-task">${escapeHtml(todo.title)}</span>`)
+          .join("");
+
+        const moreTasks = dayTodos.length > 2 ? `<div class="more-tasks">+${dayTodos.length - 2} weitere</div>` : "";
+
+        dayElement.innerHTML = `
+          <div class="day-number">${day}</div>
+          ${visibleTasks}
+          ${moreTasks}
+        `;
+
+        dayElement.addEventListener("click", () => {
+          selectedDate = dateString;
+          renderCalendar(todos);
+          renderAgenda(todos);
+        });
+
+        calendarGrid.appendChild(dayElement);
+      }
+    }
+
+    function renderAgenda(todos) {
+      const dayTodos = sortTodos(todos.filter(todo => (todo.dueDate || todo.date) === selectedDate));
+      selectedDayTitle.textContent = formatDateGerman(selectedDate);
+      selectedDayCount.textContent = dayTodos.length;
+      agendaList.innerHTML = "";
+
+      if (dayTodos.length === 0) {
+        agendaList.innerHTML = `<div class="empty">Keine Termine an diesem Tag.</div>`;
+        return;
+      }
+
+      dayTodos.forEach(todo => {
+        const item = document.createElement("div");
+        item.className = "agenda-item";
+        item.innerHTML = `
+          <div class="agenda-title">${escapeHtml(todo.title)}</div>
+          <div class="agenda-time">${formatDateTimeGerman(todo.dueDate || todo.date, todo.dueTime)}</div>
+          <button class="btn btn-calendar" type="button">Zum Kalender hinzufügen</button>
+        `;
+        item.querySelector("button").addEventListener("click", () => downloadCalendarFile(todo));
+        agendaList.appendChild(item);
+      });
+    }
+
+    function renderApp() {
+      let todos = loadTodos();
+      todos = moveUnfinishedTasksToToday(todos);
+      renderTodos(todos);
+      renderCalendar(todos);
+      renderAgenda(todos);
+    }
+
+    function openCalendar() {
+      calendarOverlay.classList.add("show");
+      calendarDrawer.classList.add("show");
+      renderApp();
+    }
+
+    function closeCalendar() {
+      calendarOverlay.classList.remove("show");
+      calendarDrawer.classList.remove("show");
     }
 
     todoForm.addEventListener("submit", event => {
@@ -947,19 +1251,44 @@
       const title = todoTitle.value.trim();
       const priority = todoPriority.value;
       const description = todoDescription.value.trim();
+      const dueDate = todoDueDate.value;
+      const dueTime = todoDueTime.value;
 
       if (!title) {
         alert("Bitte gib eine Aufgabe ein.");
         return;
       }
 
-      addTodo(title, priority, description);
+      if (dueTime && !dueDate) {
+        alert("Bitte wähle auch ein Datum aus, wenn du eine Uhrzeit angibst.");
+        return;
+      }
+
+      addTodo(title, priority, description, dueDate, dueTime);
       todoForm.reset();
       todoPriority.value = "high";
       todoTitle.focus();
     });
 
-    renderTodos();
+    prevMonth.addEventListener("click", () => {
+      calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1);
+      renderApp();
+    });
+
+    nextMonth.addEventListener("click", () => {
+      calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1);
+      renderApp();
+    });
+
+    openCalendarBtn.addEventListener("click", openCalendar);
+    closeCalendarBtn.addEventListener("click", closeCalendar);
+    calendarOverlay.addEventListener("click", closeCalendar);
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeCalendar();
+    });
+
+    renderApp();
   </script>
 </body>
 </html>
