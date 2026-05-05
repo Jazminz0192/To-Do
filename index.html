@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event-Zusammenfassung</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #eef2ff, #fdf2f8);
+      padding: 30px;
+      color: #222;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #4f46e5;
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .primary {
+      background: #4f46e5;
+      color: white;
+    }
+
+    .secondary {
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+
+    .danger {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .event-output {
+      border-radius: 18px;
+      padding: 25px;
+      background: linear-gradient(135deg, #4f46e5, #9333ea);
+      color: white;
+      min-height: 360px;
+    }
+
+    .event-type {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    .event-title {
+      font-size: 30px;
+      margin-bottom: 15px;
+    }
+
+    .info-box {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 14px;
+      border-radius: 14px;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .info-box strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fef3c7;
+    }
+
+    .map-link {
+      color: white;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .empty {
+      opacity: 0.85;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 850px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      body {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Event-Zusammenfassung Generator</h1>
+
+  <div class="container">
+    <div class="card">
+      <h2>Event-Daten eingeben</h2>
+
+      <label for="title">Titel des Events</label>
+      <input id="title" type="text" placeholder="z. B. Geburtstagsfeier" />
+
+      <label for="type">Art des Events</label>
+      <select id="type">
+        <option>Meeting</option>
+        <option>Geburtstag</option>
+        <option>Feier</option>
+        <option>Schule / Prüfung</option>
+        <option>Sport</option>
+        <option>Sonstiges</option>
+      </select>
+
+      <label for="date">Datum</label>
+      <input id="date" type="date" />
+
+      <label for="time">Uhrzeit</label>
+      <input id="time" type="time" />
+
+      <label for="location">Standort / Adresse</label>
+      <input id="location" type="text" placeholder="z. B. Musterstraße 12, Berlin" />
+
+      <label for="people">Teilnehmer</label>
+      <input id="people" type="text" placeholder="z. B. Freunde, Team, Familie" />
+
+      <label for="notes">Weitere Infos</label>
+      <textarea id="notes" placeholder="z. B. Geschenk mitbringen, Dresscode, Raum 204..."></textarea>
+
+      <div class="buttons">
+        <button class="primary" onclick="generateSummary()">Zusammenfassung erstellen</button>
+        <button class="secondary" onclick="copySummary()">Text kopieren</button>
+        <button class="danger" onclick="resetForm()">Zurücksetzen</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Schöne Zusammenfassung</h2>
+      <div id="output" class="event-output">
+        <p class="empty">Fülle links die Daten aus und klicke auf „Zusammenfassung erstellen“. Danach erscheint hier eine schöne Event-Karte.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function formatDate(dateValue) {
+      if (!dateValue) return "Kein Datum angegeben";
+      const date = new Date(dateValue + "T00:00:00");
+      return date.toLocaleDateString("de-DE", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
+    }
+
+    function generateSummary() {
+      const title = document.getElementById("title").value.trim() || "Unbenanntes Event";
+      const type = document.getElementById("type").value;
+      const date = formatDate(document.getElementById("date").value);
+      const time = document.getElementById("time").value || "Keine Uhrzeit angegeben";
+      const location = document.getElementById("location").value.trim() || "Kein Standort angegeben";
+      const people = document.getElementById("people").value.trim() || "Keine Teilnehmer angegeben";
+      const notes = document.getElementById("notes").value.trim() || "Keine weiteren Infos angegeben";
+
+      const mapsUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(location);
+
+      document.getElementById("output").innerHTML = `
+        <span class="event-type">${type}</span>
+        <h3 class="event-title">${title}</h3>
+
+        <div class="info-box">
+          <strong>Datum & Uhrzeit</strong>
+          ${date}<br>${time} Uhr
+        </div>
+
+        <div class="info-box">
+          <strong>Standort</strong>
+          ${location}<br>
+          <a class="map-link" href="${mapsUrl}" target="_blank">In Google Maps öffnen</a>
+        </div>
+
+        <div class="info-box">
+          <strong>Teilnehmer</strong>
+          ${people}
+        </div>
+
+        <div class="info-box">
+          <strong>Zusammenfassung</strong>
+          Am ${date} findet das Event „${title}“ statt. Es beginnt um ${time} Uhr und ist als „${type}“ eingetragen. Der Treffpunkt ist ${location}. Wichtig: ${notes}
+        </div>
+      `;
+    }
+
+    function copySummary() {
+      const output = document.getElementById("output").innerText;
+
+      if (!output || output.includes("Fülle links")) {
+        alert("Erstelle zuerst eine Zusammenfassung.");
+        return;
+      }
+
+      navigator.clipboard.writeText(output)
+        .then(() => alert("Zusammenfassung wurde kopiert."))
+        .catch(() => alert("Kopieren hat leider nicht funktioniert."));
+    }
+
+    function resetForm() {
+      document.getElementById("title").value = "";
+      document.getElementById("type").value = "Meeting";
+      document.getElementById("date").value = "";
+      document.getElementById("time").value = "";
+      document.getElementById("location").value = "";
+      document.getElementById("people").value = "";
+      document.getElementById("notes").value = "";
+
+      document.getElementById("output").innerHTML = '<p class="empty">Fülle links die Daten aus und klicke auf „Zusammenfassung erstellen“. Danach erscheint hier eine schöne Event-Karte.</p>';
+    }
+  </script>
+</body>
+</html>
