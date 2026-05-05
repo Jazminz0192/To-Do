@@ -664,24 +664,34 @@
       margin-bottom: 6px;
     }
 
-    .calendar-task {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      margin-top: 4px;
-      padding: 4px 6px;
-      border-radius: 8px;
-      background: rgba(37, 99, 235, 0.18);
-      color: #bfdbfe;
-      font-size: 0.74rem;
-      font-weight: 800;
+    .calendar-dots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
     }
 
-    .more-tasks {
-      margin-top: 5px;
+    .calendar-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .calendar-dot.task-dot {
+      background: #60a5fa;
+      box-shadow: 0 0 10px rgba(96, 165, 250, 0.55);
+    }
+
+    .calendar-dot.appointment-dot {
+      background: #c084fc;
+      box-shadow: 0 0 10px rgba(192, 132, 252, 0.55);
+    }
+
+    .dot-info {
+      margin-top: 7px;
       color: var(--muted);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 800;
     }
 
@@ -723,7 +733,9 @@
       .schedule-actions .btn,
       .todo-actions .btn { width: 100%; }
       .calendar-day { min-height: 72px; padding: 7px; }
-      .calendar-task { display: none; }
+      .calendar-dots { margin-top: 6px; }
+      .calendar-dot { width: 8px; height: 8px; }
+      .dot-info { display: none; }
       .calendar-month { min-width: 115px; }
     }
   </style>
@@ -1361,17 +1373,21 @@
         if (dateString === getTodayString()) dayElement.classList.add("today");
         if (dateString === selectedDate) dayElement.classList.add("selected");
 
-        const visibleTasks = dayTodos
-          .slice(0, 2)
-          .map(todo => `<span class="calendar-task">${escapeHtml(todo.title)}</span>`)
-          .join("");
+        const hasTasks = dayTodos.some(todo => (todo.type || "task") === "task");
+        const hasAppointments = dayTodos.some(todo => (todo.type || "task") === "appointment");
+        const totalEntries = dayTodos.length;
 
-        const moreTasks = dayTodos.length > 2 ? `<div class="more-tasks">+${dayTodos.length - 2} weitere</div>` : "";
+        const taskDot = hasTasks ? `<span class="calendar-dot task-dot" title="Aufgabe vorhanden"></span>` : "";
+        const appointmentDot = hasAppointments ? `<span class="calendar-dot appointment-dot" title="Termin vorhanden"></span>` : "";
+        const dotInfo = totalEntries > 0 ? `<div class="dot-info">${totalEntries} Eintrag${totalEntries === 1 ? "" : "e"}</div>` : "";
 
         dayElement.innerHTML = `
           <div class="day-number">${day}</div>
-          ${visibleTasks}
-          ${moreTasks}
+          <div class="calendar-dots">
+            ${taskDot}
+            ${appointmentDot}
+          </div>
+          ${dotInfo}
         `;
 
         dayElement.addEventListener("click", () => {
